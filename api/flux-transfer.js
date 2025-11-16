@@ -654,7 +654,7 @@ const fallbackPrompts = {
   
   renaissance: {
     name: '르네상스',
-    prompt: 'Renaissance painting by Leonardo da Vinci, EXTREME sfumato technique in Mona Lisa style, ULTRA soft smoky hazy edges, NO sharp outlines anywhere, completely blurred gentle boundaries, mysterious atmospheric depth, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
+    prompt: 'Renaissance painting by Leonardo da Vinci with Mona Lisa style sfumato technique, THEN apply soft atmospheric hazy veil over entire painting, add gentle misty blur filter on top like fog effect, post-processing soft diffuse overlay creating mysterious smoky atmosphere, final haze layer for authentic sfumato depth, NO sharp outlines, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
   },
   
   baroque: {
@@ -1141,7 +1141,7 @@ export default async function handler(req, res) {
     let selectedArtist;
     let selectionMethod;
     let selectionDetails = {};
-    let controlStrength = 0.80; // 기본값 0.80, 레오나르도/르네상스만 0.5
+    let controlStrength = 0.80; // 기본값 0.80, 레오나르도/르네상스만 0.75 (후처리 안개)
     
     if (selectedStyle.category === 'oriental' && selectedStyle.id === 'japanese') {
       // 일본 우키요에 (고정)
@@ -1175,15 +1175,15 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // 레오나르도 다빈치 선택시 모나리자 같은 극강의 스푸마토
+        // 레오나르도 다빈치 선택시 안전한 스푸마토 (후처리 안개 효과)
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-          controlStrength = 0.5; // 레오나르도만 0.5 (스푸마토 효과 극대화)
+          controlStrength = 0.75; // 얼굴 보존 (75%)
           if (!finalPrompt.includes('like Mona Lisa')) {
             finalPrompt = finalPrompt.replace(
               'sfumato technique',
-              'exactly like Mona Lisa painting, EXTREME sfumato technique with ULTRA soft hazy smoky boundaries, absolutely NO sharp outlines or hard edges anywhere, completely blurred gentle atmospheric transitions, mysterious depth like Mona Lisa masterpiece'
+              'Leonardo da Vinci Mona Lisa style sfumato technique, THEN apply soft atmospheric hazy veil over entire painting, add gentle misty blur filter on top like fog effect, post-processing soft diffuse overlay creating mysterious smoky atmosphere, final haze layer for authentic sfumato depth, NO sharp outlines, completely soft blurred boundaries'
             );
-            console.log('✅ Enhanced Mona Lisa-like EXTREME sfumato + control_strength 0.5 for Leonardo');
+            console.log('✅ Enhanced Mona Lisa sfumato with post-processing haze effect + control_strength 0.75');
           }
         }
         
@@ -1249,8 +1249,8 @@ export default async function handler(req, res) {
         
         // Fallback에서도 control_strength 설정
         if (fallbackKey === 'renaissance') {
-          controlStrength = 0.5; // 르네상스 fallback도 0.5
-          console.log('✅ Renaissance fallback: control_strength 0.5');
+          controlStrength = 0.75; // 르네상스 fallback 0.75
+          console.log('✅ Renaissance fallback: control_strength 0.75');
         }
       }
     } else {
@@ -1283,8 +1283,8 @@ export default async function handler(req, res) {
       
       // Fallback (no key)에서도 control_strength 설정
       if (fallbackKey === 'renaissance') {
-        controlStrength = 0.5; // 르네상스 fallback도 0.5
-        console.log('✅ Renaissance fallback (no key): control_strength 0.5');
+        controlStrength = 0.75; // 르네상스 fallback 0.75
+        console.log('✅ Renaissance fallback (no key): control_strength 0.75');
       }
     }
 

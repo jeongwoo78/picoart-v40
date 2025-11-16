@@ -1236,14 +1236,14 @@ export default async function handler(req, res) {
     console.log('Final prompt:', finalPrompt);
     
     // ========================================
-    // PicoArt 핵심 원칙: Level 3 회화 강조 + 얼굴 보존
+    // PicoArt 핵심 원칙: Level 4 최강 회화 강조 + 얼굴 보존
     // ========================================
-    const paintingEnforcement = ', CRITICAL REQUIREMENTS: 1) traditional oil painting with thick visible brushstrokes, canvas texture, painterly artistic rendering, NOT photographic, NOT photo-realistic, fully painted composition throughout, 2) single unified artistic composition with all figures together in one cohesive painted scene, NOT separated into multiple groups, 3) PRESERVE FACIAL IDENTITY - maintain recognizable facial features, face shape, distinctive characteristics of each person from the photo, people must remain identifiable';
+    const paintingEnforcement = ', CRITICAL REQUIREMENTS: 1) traditional oil painting masterpiece with thick impasto brushstrokes, visible canvas texture, hand-painted artistic interpretation, painterly rendering with artistic stylization, ABSOLUTELY NOT photographic, NOT photo-realistic, NO camera effects, completely painted artwork, all elements fully rendered in paint medium, 2) single unified artistic composition with all figures together in one cohesive painted scene, NOT separated into multiple groups, 3) PRESERVE FACIAL IDENTITY - maintain recognizable facial features, face shape, distinctive characteristics of each person from the photo, people must remain identifiable';
     
     // 이미 회화 강조가 없는 경우에만 추가
-    if (!finalPrompt.includes('PRESERVE FACIAL') && !finalPrompt.includes('brushstrokes')) {
+    if (!finalPrompt.includes('PRESERVE FACIAL') && !finalPrompt.includes('impasto')) {
       finalPrompt = finalPrompt + paintingEnforcement;
-      console.log('✅ Added Level 3 painting enforcement (brushstrokes + texture) + facial preservation');
+      console.log('✅ Added Level 4 MAXIMUM painting enforcement (impasto + NO photo) + facial preservation');
     }
     
     // FLUX Depth 변환 (최신 API 버전)
@@ -1262,7 +1262,7 @@ export default async function handler(req, res) {
             prompt: finalPrompt,
             num_inference_steps: 24,
             guidance: 12,
-            control_strength: 0.85,  // 0.85 = 얼굴 보존 + 회화 느낌 균형
+            control_strength: 0.8,  // 0.8 = 얼굴 보존 + 회화 느낌 강화 (Level 4와 함께)
             output_format: 'jpg',
             output_quality: 90
           }

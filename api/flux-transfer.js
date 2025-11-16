@@ -1141,7 +1141,7 @@ export default async function handler(req, res) {
     let selectedArtist;
     let selectionMethod;
     let selectionDetails = {};
-    let controlStrength = 0.80; // 기본값 0.80, 레오나르도/르네상스만 0.65
+    let controlStrength = 0.80; // 기본값 0.80, 레오나르도/르네상스만 0.5
     
     if (selectedStyle.category === 'oriental' && selectedStyle.id === 'japanese') {
       // 일본 우키요에 (고정)
@@ -1177,13 +1177,13 @@ export default async function handler(req, res) {
         
         // 레오나르도 다빈치 선택시 모나리자 같은 극강의 스푸마토
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-          controlStrength = 0.65; // 레오나르도만 0.65 (스푸마토 효과 극대화)
+          controlStrength = 0.5; // 레오나르도만 0.5 (스푸마토 효과 극대화)
           if (!finalPrompt.includes('like Mona Lisa')) {
             finalPrompt = finalPrompt.replace(
               'sfumato technique',
               'exactly like Mona Lisa painting, EXTREME sfumato technique with ULTRA soft hazy smoky boundaries, absolutely NO sharp outlines or hard edges anywhere, completely blurred gentle atmospheric transitions, mysterious depth like Mona Lisa masterpiece'
             );
-            console.log('✅ Enhanced Mona Lisa-like EXTREME sfumato + control_strength 0.65 for Leonardo');
+            console.log('✅ Enhanced Mona Lisa-like EXTREME sfumato + control_strength 0.5 for Leonardo');
           }
         }
         
@@ -1249,8 +1249,8 @@ export default async function handler(req, res) {
         
         // Fallback에서도 control_strength 설정
         if (fallbackKey === 'renaissance') {
-          controlStrength = 0.65; // 르네상스 fallback도 0.65
-          console.log('✅ Renaissance fallback: control_strength 0.65');
+          controlStrength = 0.5; // 르네상스 fallback도 0.5
+          console.log('✅ Renaissance fallback: control_strength 0.5');
         }
       }
     } else {
@@ -1283,8 +1283,8 @@ export default async function handler(req, res) {
       
       // Fallback (no key)에서도 control_strength 설정
       if (fallbackKey === 'renaissance') {
-        controlStrength = 0.65; // 르네상스 fallback도 0.65
-        console.log('✅ Renaissance fallback (no key): control_strength 0.65');
+        controlStrength = 0.5; // 르네상스 fallback도 0.5
+        console.log('✅ Renaissance fallback (no key): control_strength 0.5');
       }
     }
 

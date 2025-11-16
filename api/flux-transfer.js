@@ -654,7 +654,7 @@ const fallbackPrompts = {
   
   renaissance: {
     name: '르네상스',
-    prompt: 'Renaissance painting exactly like Mona Lisa by Leonardo da Vinci, STRONG sfumato technique with extremely soft smoky edges, mysterious hazy atmospheric transitions, NO sharp outlines, gentle blurred boundaries throughout, harmonious balanced composition, warm golden Renaissance colors, detailed naturalistic rendering, gentle serene expressions, classical perspective, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups or layers, painted in Renaissance masterpiece quality'
+    prompt: 'Renaissance painting by Leonardo da Vinci, EXTREME sfumato technique in Mona Lisa style, ULTRA soft smoky hazy edges, NO sharp outlines anywhere, completely blurred gentle boundaries, mysterious atmospheric depth, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
   },
   
   baroque: {
@@ -1174,61 +1174,44 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // ========================================
-        // 여성 초상화/상반신 → 모나리자 스타일 강제 적용
-        // ========================================
-        const analysis = (aiResult.analysis || '').toLowerCase();
-        const isFemale = analysis.includes('female') || analysis.includes('woman');
-        const isPortraitOrUpperBody = analysis.includes('portrait') || 
-                                       analysis.includes('upper body') || 
-                                       analysis.includes('face');
+        // 레오나르도 다빈치 선택시 극강의 스푸마토
+        if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
+          if (!finalPrompt.includes('EXTREME sfumato')) {
+            finalPrompt = finalPrompt.replace(
+              'sfumato technique',
+              'EXTREME sfumato technique in Mona Lisa style, ULTRA soft smoky hazy edges, NO sharp outlines anywhere, completely blurred gentle boundaries, mysterious atmospheric depth, maximum soft transitions'
+            );
+            console.log('✅ Enhanced EXTREME sfumato for Leonardo da Vinci');
+          }
+        }
         
-        if (isFemale && isPortraitOrUpperBody) {
-          finalPrompt = 'Renaissance painting by Leonardo da Vinci, paint this EXACTLY like the Mona Lisa masterpiece, STRONG sfumato technique with extremely soft smoky edges creating mysterious hazy atmospheric transitions, NO sharp outlines anywhere, gentle blurred boundaries throughout entire painting, warm golden Renaissance colors, serene enigmatic expression, harmonious balanced composition, Mona Lisa style with soft atmospheric depth';
-          selectedArtist = 'Leonardo da Vinci';
-          console.log('🎨 FORCED Mona Lisa style - Female portrait/upper body detected');
-        } else {
-          // 기존 화가별 강화 로직
-          
-          // 레오나르도 다빈치 선택시 모나리자 스타일 강화
-          if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-            if (!finalPrompt.includes('like Mona Lisa')) {
-              finalPrompt = finalPrompt.replace(
-                'sfumato technique',
-                'paint exactly like Mona Lisa by Leonardo da Vinci, STRONG sfumato technique with extremely soft smoky edges, mysterious hazy atmospheric transitions, NO sharp outlines, gentle blurred boundaries throughout, Mona Lisa masterpiece style'
-              );
-              console.log('✅ Enhanced to Mona Lisa style for Leonardo da Vinci');
-            }
+        // 카라바조 선택시 키아로스쿠로 강화
+        if (selectedArtist.includes('Caravaggio')) {
+          if (!finalPrompt.includes('DRAMATIC chiaroscuro')) {
+            finalPrompt = finalPrompt.replace(
+              'chiaroscuro',
+              'DRAMATIC chiaroscuro with extreme light-dark contrast, theatrical spotlight effect, deep black shadows, tenebrism technique'
+            );
+            console.log('✅ Enhanced chiaroscuro for Caravaggio');
           }
-          
-          // 카라바조 선택시 키아로스쿠로 강화
-          if (selectedArtist.includes('Caravaggio')) {
-            if (!finalPrompt.includes('DRAMATIC chiaroscuro')) {
-              finalPrompt = finalPrompt.replace(
-                'chiaroscuro',
-                'DRAMATIC chiaroscuro with extreme light-dark contrast, theatrical spotlight effect, deep black shadows, tenebrism technique'
-              );
-              console.log('✅ Enhanced chiaroscuro for Caravaggio');
-            }
+        }
+        
+        // 렘브란트 선택시 빛 강화
+        if (selectedArtist.includes('Rembrandt')) {
+          if (!finalPrompt.includes('golden luminous light')) {
+            finalPrompt = finalPrompt + ', MASTERFUL use of golden luminous light, warm glowing illumination, subtle light gradations, Rembrandt lighting technique with soft transitions between light and shadow';
+            console.log('✅ Enhanced light mastery for Rembrandt');
           }
-          
-          // 렘브란트 선택시 빛 강화
-          if (selectedArtist.includes('Rembrandt')) {
-            if (!finalPrompt.includes('golden luminous light')) {
-              finalPrompt = finalPrompt + ', MASTERFUL use of golden luminous light, warm glowing illumination, subtle light gradations, Rembrandt lighting technique with soft transitions between light and shadow';
-              console.log('✅ Enhanced light mastery for Rembrandt');
-            }
-          }
-          
-          // 티치아노 선택시 하늘/색채 강화
-          if (selectedArtist.includes('Titian')) {
-            if (!finalPrompt.includes('luminous golden')) {
-              finalPrompt = finalPrompt.replace(
-                'Venetian color',
-                'luminous golden Venetian color with glowing sunset skies, rich warm atmospheric tones, radiant golden-red palette'
-              );
-              console.log('✅ Enhanced Venetian skies for Titian');
-            }
+        }
+        
+        // 티치아노 선택시 하늘/색채 강화
+        if (selectedArtist.includes('Titian')) {
+          if (!finalPrompt.includes('luminous golden')) {
+            finalPrompt = finalPrompt.replace(
+              'Venetian color',
+              'luminous golden Venetian color with glowing sunset skies, rich warm atmospheric tones, radiant golden-red palette'
+            );
+            console.log('✅ Enhanced Venetian skies for Titian');
           }
         }
       } else {

@@ -654,7 +654,7 @@ const fallbackPrompts = {
   
   renaissance: {
     name: '르네상스',
-    prompt: 'Renaissance painting style, STRONG sfumato technique with soft smoky atmospheric transitions and gentle blurred edges, harmonious balanced composition, warm golden Renaissance colors, detailed naturalistic rendering, gentle serene expressions, classical perspective, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups or layers, painted in Renaissance masterpiece quality by Leonardo da Vinci or Raphael'
+    prompt: 'Renaissance painting exactly like Mona Lisa by Leonardo da Vinci, STRONG sfumato technique with extremely soft smoky edges, mysterious hazy atmospheric transitions, NO sharp outlines, gentle blurred boundaries throughout, harmonious balanced composition, warm golden Renaissance colors, detailed naturalistic rendering, gentle serene expressions, classical perspective, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups or layers, painted in Renaissance masterpiece quality'
   },
   
   baroque: {
@@ -1174,14 +1174,14 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // 레오나르도 다빈치 선택시 스푸마토 기법 강화
+        // 레오나르도 다빈치 선택시 모나리자 스타일 강화
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-          if (!finalPrompt.includes('STRONG sfumato')) {
+          if (!finalPrompt.includes('like Mona Lisa')) {
             finalPrompt = finalPrompt.replace(
               'sfumato technique',
-              'STRONG sfumato technique with soft smoky atmospheric transitions, mysterious subtle gradations, gentle blurred edges'
+              'paint exactly like Mona Lisa by Leonardo da Vinci, STRONG sfumato technique with extremely soft smoky edges, mysterious hazy atmospheric transitions, NO sharp outlines, gentle blurred boundaries throughout, Mona Lisa masterpiece style'
             );
-            console.log('✅ Enhanced sfumato for Leonardo da Vinci');
+            console.log('✅ Enhanced to Mona Lisa style for Leonardo da Vinci');
           }
         }
         

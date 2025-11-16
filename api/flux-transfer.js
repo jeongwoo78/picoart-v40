@@ -1236,14 +1236,14 @@ export default async function handler(req, res) {
     console.log('Final prompt:', finalPrompt);
     
     // ========================================
-    // PicoArt 핵심 원칙: 모든 프롬프트에 회화 강조 + 얼굴 보존 추가
+    // PicoArt 핵심 원칙: Level 3 회화 강조 + 얼굴 보존
     // ========================================
-    const paintingEnforcement = ', CRITICAL REQUIREMENTS: 1) single unified artistic composition with all figures together in one cohesive painted scene, NOT photographic, NOT separated into multiple groups, 2) PRESERVE FACIAL IDENTITY - maintain recognizable facial features, face shape, distinctive characteristics of each person from the photo, people must remain identifiable';
+    const paintingEnforcement = ', CRITICAL REQUIREMENTS: 1) traditional oil painting with thick visible brushstrokes, canvas texture, painterly artistic rendering, NOT photographic, NOT photo-realistic, fully painted composition throughout, 2) single unified artistic composition with all figures together in one cohesive painted scene, NOT separated into multiple groups, 3) PRESERVE FACIAL IDENTITY - maintain recognizable facial features, face shape, distinctive characteristics of each person from the photo, people must remain identifiable';
     
     // 이미 회화 강조가 없는 경우에만 추가
-    if (!finalPrompt.includes('single unified') && !finalPrompt.includes('PRESERVE FACIAL')) {
+    if (!finalPrompt.includes('PRESERVE FACIAL') && !finalPrompt.includes('brushstrokes')) {
       finalPrompt = finalPrompt + paintingEnforcement;
-      console.log('✅ Added painting enforcement + facial preservation to prompt');
+      console.log('✅ Added Level 3 painting enforcement (brushstrokes + texture) + facial preservation');
     }
     
     // FLUX Depth 변환 (최신 API 버전)

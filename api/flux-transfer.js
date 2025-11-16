@@ -783,7 +783,7 @@ function analyzePhoto() {
 // ========================================
 // AI 화가 자동 선택 (타임아웃 포함)
 // ========================================
-async function selectArtistWithAI(imageBase64, selectedStyle, timeoutMs = 8000) {
+async function selectArtistWithAI(imageBase64, selectedStyle, timeoutMs = 15000) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   
@@ -998,57 +998,25 @@ Keep it concise and accurate.`;
       
       // 상세 가이드라인이 있는 사조
       if (guidelines) {
-        promptText = `Analyze this photo and select the BEST ${categoryName} artist to transform it.
+        promptText = `Select the BEST ${categoryName} artist for this photo.
 
 ${guidelines}
 
 ${hints}
 
-CRITICAL INSTRUCTIONS:
-1. FIRST analyze the photo thoroughly:
-   - Count people (1, 2-3, 4+?)
-   - Identify gender if visible
-   - Shot type (portrait, upper body, full body)
-   - Subject (person, landscape, object, etc.)
-   - Background (indoor, outdoor, urban, rural, neutral)
-   - Mood (happy, sad, dramatic, peaceful, anxious, etc.)
-   - Age range if person (baby, child, young, adult, elderly)
-   - Lighting (natural, window, spotlight, etc.)
-   - Expression (smiling, serious, anxious, etc.)
+Instructions:
+1. Analyze photo: people count, subject, mood, age
+2. Follow RECOMMENDATIONS (70-80% weight)
+3. Choose most DISTINCTIVE artist
+4. Preserve facial identity
 
-2. Consider the STRONG RECOMMENDATIONS above as 70-80% weight
-   - They guide you to the most distinctive choices
-   - But YOU have final judgment
-
-3. If photo clearly matches a special case, choose that artist
-   - Example: elderly → Rembrandt even if 1-person (Caravaggio also strong)
-   - Example: window light + female → Vermeer vs Caravaggio
-
-4. Choose the artist that will create the MOST DISTINCTIVE and RECOGNIZABLE result
-   - Prioritize artists with strong individual style
-   - Think: "Will people immediately recognize this artist's style?"
-
-5. CRITICAL: Preserve original subject identity
-   - Baby stays baby, elderly stays elderly
-   - Maintain approximate age and gender
-   - MOST IMPORTANT: Preserve facial identity - face shape, distinctive features, recognizable characteristics
-   - People must remain identifiable as the same person
-
-6. PAINTING STYLE REQUIREMENT (PicoArt Core):
-   - Your prompt MUST create fully painted artistic composition
-   - All people integrated into ONE unified painted scene
-   - NOT photographic, NOT separated groups
-   - Include: "single unified artistic composition, all figures in one cohesive painted scene, preserving facial identity and distinctive features"
-
-Return ONLY valid JSON (no markdown, no code blocks):
+Return JSON only:
 {
-  "analysis": "Brief photo analysis: count, subject, mood, key features (2-3 sentences)",
-  "selected_artist": "Full Artist Name in English",
-  "reason": "Why this specific artist is the best match for THIS photo (1-2 sentences)",
-  "prompt": "painting by [Artist Full Name], [artist's specific techniques and characteristics], [describing the subject while preserving original features]. Example: 'painting by Caravaggio, dramatic chiaroscuro with dark background and theatrical spotlight on figure, tenebrism technique, depicting [subject] while preserving original age and features'"
-}
-
-Keep concise and accurate. Choose the artist that creates MAXIMUM distinctive impact!`;
+  "analysis": "brief (1 sentence)",
+  "selected_artist": "Artist Name",
+  "reason": "why (1 sentence)",
+  "prompt": "painting by [Artist], [technique], depicting subject with preserved facial features in unified artistic composition"
+}`;
       }
     }
     
@@ -1192,7 +1160,7 @@ export default async function handler(req, res) {
       const aiResult = await selectArtistWithAI(
         image, 
         selectedStyle,
-        8000 // 8초 타임아웃
+        15000 // 15초 타임아웃 (성공률 98%)
       );
       
       if (aiResult.success) {

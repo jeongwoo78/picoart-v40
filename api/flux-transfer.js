@@ -654,12 +654,12 @@ const fallbackPrompts = {
   
   renaissance: {
     name: '르네상스',
-    prompt: 'Renaissance painting style, soft sfumato technique, harmonious balanced composition, warm golden Renaissance colors, detailed naturalistic rendering, gentle serene expressions, classical perspective, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups or layers, painted in Renaissance masterpiece quality by Leonardo da Vinci or Raphael'
+    prompt: 'Renaissance painting style, STRONG sfumato technique with soft smoky atmospheric transitions and gentle blurred edges, harmonious balanced composition, warm golden Renaissance colors, detailed naturalistic rendering, gentle serene expressions, classical perspective, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups or layers, painted in Renaissance masterpiece quality by Leonardo da Vinci or Raphael'
   },
   
   baroque: {
     name: '바로크',
-    prompt: 'Baroque painting style by Caravaggio, dramatic chiaroscuro lighting, rich deep colors, dynamic diagonal composition, theatrical emotional atmosphere, strong contrast between light and shadow, single unified composition with all figures together in one cohesive continuous scene NOT separated into multiple groups, painted in Baroque masterpiece quality'
+    prompt: 'Baroque painting style by Caravaggio, DRAMATIC chiaroscuro lighting with extreme light-dark contrast, theatrical spotlight effect, deep black shadows, tenebrism technique, rich deep colors, dynamic diagonal composition, theatrical emotional atmosphere, single unified composition with all figures together in one cohesive continuous scene NOT separated into multiple groups, painted in Baroque masterpiece quality'
   },
   
   rococo: {
@@ -1173,6 +1173,47 @@ export default async function handler(req, res) {
           reason: aiResult.reason
         };
         console.log('✅ AI selected:', selectedArtist);
+        
+        // 레오나르도 다빈치 선택시 스푸마토 기법 강화
+        if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
+          if (!finalPrompt.includes('STRONG sfumato')) {
+            finalPrompt = finalPrompt.replace(
+              'sfumato technique',
+              'STRONG sfumato technique with soft smoky atmospheric transitions, mysterious subtle gradations, gentle blurred edges'
+            );
+            console.log('✅ Enhanced sfumato for Leonardo da Vinci');
+          }
+        }
+        
+        // 카라바조 선택시 키아로스쿠로 강화
+        if (selectedArtist.includes('Caravaggio')) {
+          if (!finalPrompt.includes('DRAMATIC chiaroscuro')) {
+            finalPrompt = finalPrompt.replace(
+              'chiaroscuro',
+              'DRAMATIC chiaroscuro with extreme light-dark contrast, theatrical spotlight effect, deep black shadows, tenebrism technique'
+            );
+            console.log('✅ Enhanced chiaroscuro for Caravaggio');
+          }
+        }
+        
+        // 렘브란트 선택시 빛 강화
+        if (selectedArtist.includes('Rembrandt')) {
+          if (!finalPrompt.includes('golden luminous light')) {
+            finalPrompt = finalPrompt + ', MASTERFUL use of golden luminous light, warm glowing illumination, subtle light gradations, Rembrandt lighting technique with soft transitions between light and shadow';
+            console.log('✅ Enhanced light mastery for Rembrandt');
+          }
+        }
+        
+        // 티치아노 선택시 하늘/색채 강화
+        if (selectedArtist.includes('Titian')) {
+          if (!finalPrompt.includes('luminous golden')) {
+            finalPrompt = finalPrompt.replace(
+              'Venetian color',
+              'luminous golden Venetian color with glowing sunset skies, rich warm atmospheric tones, radiant golden-red palette'
+            );
+            console.log('✅ Enhanced Venetian skies for Titian');
+          }
+        }
       } else {
         // AI 실패 → Fallback
         console.log('⚠️ AI failed, using fallback');

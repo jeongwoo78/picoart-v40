@@ -654,7 +654,7 @@ const fallbackPrompts = {
   
   renaissance: {
     name: '르네상스',
-    prompt: 'Renaissance painting by Leonardo da Vinci with soft blurred haze filter over ENTIRE image, overall misty atmospheric blur covering whole painting, uniform gentle fog effect across all areas, everything slightly softened and out of focus like viewing through misty glass, complete soft focus throughout, NO sharp outlines anywhere, all edges gently blurred, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
+    prompt: 'Renaissance painting by Leonardo da Vinci. AFTER completing the painting, THEN apply Orton effect with diffusion filter over entire finished artwork, soft focus overlay throughout, Gaussian blur atmospheric haze covering whole image, gentle dreamy glow effect across all areas, NO sharp outlines anywhere, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
   },
   
   baroque: {
@@ -1175,15 +1175,15 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // 레오나르도 다빈치 선택시 전체 이미지 안개 효과
+        // 레오나르도 다빈치 선택시 2단계: 완성 후 Orton effect
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
           controlStrength = 0.75; // 얼굴 보존 (75%)
           if (!finalPrompt.includes('like Mona Lisa')) {
             finalPrompt = finalPrompt.replace(
               'sfumato technique',
-              'Leonardo da Vinci Mona Lisa style with soft blurred haze filter over ENTIRE image, overall misty atmospheric blur covering whole painting, uniform gentle fog effect across all areas, everything slightly softened and out of focus like viewing through misty glass, complete soft focus throughout, NO sharp outlines anywhere, all edges gently blurred'
+              'Leonardo da Vinci Mona Lisa painting style. AFTER completing the painting, THEN apply Orton effect with diffusion filter over entire finished artwork, soft focus overlay throughout, Gaussian blur atmospheric haze covering whole image, gentle dreamy glow effect across all areas, NO sharp outlines anywhere'
             );
-            console.log('✅ Enhanced with ENTIRE image haze effect + control_strength 0.75');
+            console.log('✅ Enhanced with 2-step: Paint THEN Orton effect + diffusion filter');
           }
         }
         

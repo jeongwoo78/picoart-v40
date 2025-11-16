@@ -1141,6 +1141,7 @@ export default async function handler(req, res) {
     let selectedArtist;
     let selectionMethod;
     let selectionDetails = {};
+    let controlStrength = 0.80; // 기본값 0.80, 레오나르도/르네상스만 0.65
     
     if (selectedStyle.category === 'oriental' && selectedStyle.id === 'japanese') {
       // 일본 우키요에 (고정)
@@ -1174,14 +1175,15 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // 레오나르도 다빈치 선택시 극강의 스푸마토
+        // 레오나르도 다빈치 선택시 모나리자 같은 극강의 스푸마토
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-          if (!finalPrompt.includes('EXTREME sfumato')) {
+          controlStrength = 0.65; // 레오나르도만 0.65 (스푸마토 효과 극대화)
+          if (!finalPrompt.includes('like Mona Lisa')) {
             finalPrompt = finalPrompt.replace(
               'sfumato technique',
-              'EXTREME sfumato technique in Mona Lisa style, ULTRA soft smoky hazy edges, NO sharp outlines anywhere, completely blurred gentle boundaries, mysterious atmospheric depth, maximum soft transitions'
+              'exactly like Mona Lisa painting, EXTREME sfumato technique with ULTRA soft hazy smoky boundaries, absolutely NO sharp outlines or hard edges anywhere, completely blurred gentle atmospheric transitions, mysterious depth like Mona Lisa masterpiece'
             );
-            console.log('✅ Enhanced EXTREME sfumato for Leonardo da Vinci');
+            console.log('✅ Enhanced Mona Lisa-like EXTREME sfumato + control_strength 0.65 for Leonardo');
           }
         }
         
@@ -1244,6 +1246,12 @@ export default async function handler(req, res) {
         selectionDetails = {
           ai_error: aiResult.error
         };
+        
+        // Fallback에서도 control_strength 설정
+        if (fallbackKey === 'renaissance') {
+          controlStrength = 0.65; // 르네상스 fallback도 0.65
+          console.log('✅ Renaissance fallback: control_strength 0.65');
+        }
       }
     } else {
       // ANTHROPIC_API_KEY 없음 → Fallback
@@ -1272,6 +1280,12 @@ export default async function handler(req, res) {
       finalPrompt = fallback.prompt;
       selectedArtist = fallback.name;
       selectionMethod = 'fallback_no_key';
+      
+      // Fallback (no key)에서도 control_strength 설정
+      if (fallbackKey === 'renaissance') {
+        controlStrength = 0.65; // 르네상스 fallback도 0.65
+        console.log('✅ Renaissance fallback (no key): control_strength 0.65');
+      }
     }
 
     console.log('Final prompt:', finalPrompt);
@@ -1303,7 +1317,7 @@ export default async function handler(req, res) {
             prompt: finalPrompt,
             num_inference_steps: 24,
             guidance: 12,
-            control_strength: 0.80,  // 0.80 = 얼굴 보존 강화 (여성 초상화는 모나리자 스타일로)
+            control_strength: controlStrength,  // 기본 0.80, 레오나르도 0.65
             output_format: 'jpg',
             output_quality: 90
           }

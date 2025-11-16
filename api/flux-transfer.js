@@ -1303,7 +1303,7 @@ export default async function handler(req, res) {
             prompt: finalPrompt,
             num_inference_steps: 24,
             guidance: 12,
-            control_strength: 0.75,  // 0.75 = 회화 25%, 구도 75% (Level 3 최적 조합)
+            control_strength: 0.70,  // 0.70 = 회화 30%, 구도 70% (스푸마토 효과 강화)
             output_format: 'jpg',
             output_quality: 90
           }

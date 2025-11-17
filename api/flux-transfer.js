@@ -1141,11 +1141,7 @@ export default async function handler(req, res) {
     let selectedArtist;
     let selectionMethod;
     let selectionDetails = {};
-<<<<<<< HEAD
     let controlStrength = 0.80; // 기본 0.80, 레오나르도만 0.65
-=======
-    let needsOrtonEffect = false; // Sharp 후처리 필요 여부
->>>>>>> 7af5819755bae95833dc22e6fbde3ee557dff52d
     
     if (selectedStyle.category === 'oriental' && selectedStyle.id === 'japanese') {
       // 일본 우키요에 (고정)
@@ -1179,7 +1175,6 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-<<<<<<< HEAD
         // 레오나르도 다빈치 선택시 극강 스푸마토 (control_strength 0.65)
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
           controlStrength = 0.65;
@@ -1190,12 +1185,6 @@ export default async function handler(req, res) {
             );
             console.log('✅ Role-based prompt: You are Leonardo da Vinci + control_strength 0.65');
           }
-=======
-        // 레오나르도 다빈치 선택시 Sharp 후처리 예약
-        if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-          needsOrtonEffect = true; // Sharp로 Orton effect 적용 예정
-          console.log('✅ Leonardo detected - Orton effect will be applied with Sharp');
->>>>>>> 7af5819755bae95833dc22e6fbde3ee557dff52d
         }
         
         // 카라바조 선택시 키아로스쿠로 강화
@@ -1269,17 +1258,10 @@ export default async function handler(req, res) {
           ai_error: aiResult.error
         };
         
-<<<<<<< HEAD
         // Renaissance fallback도 control_strength 0.65
         if (fallbackKey === 'renaissance') {
           controlStrength = 0.65;
           console.log('✅ Renaissance fallback: control_strength 0.65');
-=======
-        // Renaissance fallback도 Orton effect 적용
-        if (fallbackKey === 'renaissance') {
-          needsOrtonEffect = true;
-          console.log('✅ Renaissance fallback - Orton effect will be applied with Sharp');
->>>>>>> 7af5819755bae95833dc22e6fbde3ee557dff52d
         }
       }
     } else {
@@ -1310,17 +1292,10 @@ export default async function handler(req, res) {
       selectedArtist = fallback.name;
       selectionMethod = 'fallback_no_key';
       
-<<<<<<< HEAD
       // Renaissance fallback (no key)도 control_strength 0.65
       if (fallbackKey === 'renaissance') {
         controlStrength = 0.65;
         console.log('✅ Renaissance fallback (no key): control_strength 0.65');
-=======
-      // Renaissance fallback (no key)도 Orton effect 적용
-      if (fallbackKey === 'renaissance') {
-        needsOrtonEffect = true;
-        console.log('✅ Renaissance fallback (no key) - Orton effect will be applied with Sharp');
->>>>>>> 7af5819755bae95833dc22e6fbde3ee557dff52d
       }
     }
 
@@ -1353,7 +1328,7 @@ export default async function handler(req, res) {
             prompt: finalPrompt,
             num_inference_steps: 24,
             guidance: 12,
-            control_strength: 0.80,  // 고정 0.80 (얼굴 보존, Sharp 후처리로 안개 효과)
+            control_strength: controlStrength,  // 기본 0.80, 레오나르도 0.65
             output_format: 'jpg',
             output_quality: 90
           }
@@ -1373,59 +1348,12 @@ export default async function handler(req, res) {
     const data = await response.json();
     console.log('✅ FLUX Depth completed');
     
-    // ========================================
-    // Sharp 후처리: Orton Effect (레오나르도만)
-    // ========================================
-    let finalOutput = data.output;
-    
-    if (needsOrtonEffect && data.output) {
-      try {
-        console.log('🎨 Applying Orton effect with Sharp...');
-        
-        // Sharp 라이브러리 동적 import (Vercel 환경)
-        const sharp = (await import('sharp')).default;
-        
-        // 1. FLUX 출력 이미지 다운로드
-        const imageUrl = Array.isArray(data.output) ? data.output[0] : data.output;
-        const imageResponse = await fetch(imageUrl);
-        const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-        
-        // 2. Blur 버전 생성
-        const blurred = await sharp(imageBuffer)
-          .blur(8)  // 블러 강도 8
-          .toBuffer();
-        
-        // 3. Orton Effect: 원본 + Blur 합성
-        const ortonEffect = await sharp(imageBuffer)
-          .composite([
-            {
-              input: blurred,
-              blend: 'overlay',  // 오버레이 블렌딩
-              opacity: 60        // 투명도 60%
-            }
-          ])
-          .jpeg({ quality: 90 })
-          .toBuffer();
-        
-        // 4. Base64로 변환
-        const base64 = ortonEffect.toString('base64');
-        finalOutput = `data:image/jpeg;base64,${base64}`;
-        
-        console.log('✅ Orton effect applied successfully');
-      } catch (sharpError) {
-        console.error('⚠️ Sharp processing failed, using original:', sharpError.message);
-        // Sharp 실패시 원본 사용
-      }
-    }
-    
     // 결과에 선택 정보 포함
     res.status(200).json({
       ...data,
-      output: finalOutput,  // Sharp 처리된 이미지 또는 원본
       selected_artist: selectedArtist,
       selection_method: selectionMethod,
-      selection_details: selectionDetails,
-      orton_effect_applied: needsOrtonEffect
+      selection_details: selectionDetails
     });
     
   } catch (error) {

@@ -1176,13 +1176,13 @@ export default async function handler(req, res) {
         console.log('✅ AI selected:', selectedArtist);
         
         // 레오나르도 다빈치 선택시 스푸마토 강화
-        if (selectedArtist.toUpperCase().includes('LEONARDO') || selectedArtist.toUpperCase().includes('DA VINCI')) {
+        if (selectedArtist.toUpperCase().trim().includes('LEONARDO') || selectedArtist.toUpperCase().trim().includes('DA VINCI')) {
           finalPrompt = finalPrompt + '. You are Leonardo da Vinci. Transform this person into your signature portrait style. Paint with your characteristic sfumato technique - apply mysterious soft-edged transitions throughout, gentle blurred atmospheric depth, no sharp outlines anywhere, every edge softly dissolved into atmosphere like your masterful portraits. Preserve their identity while applying your legendary sfumato mastery';
           console.log('✅ Role-based: You are Leonardo da Vinci (control_strength 0.80)');
         }
         
         // 카라바조 선택시 키아로스쿠로 강화
-        if (selectedArtist.toUpperCase().includes('CARAVAGGIO')) {
+        if (selectedArtist.toUpperCase().trim().includes('CARAVAGGIO')) {
           if (!finalPrompt.includes('DRAMATIC chiaroscuro')) {
             finalPrompt = finalPrompt + ', DRAMATIC chiaroscuro with extreme light-dark contrast, theatrical spotlight effect, deep black shadows, tenebrism technique';
             console.log('✅ Enhanced chiaroscuro for Caravaggio');
@@ -1190,7 +1190,7 @@ export default async function handler(req, res) {
         }
         
         // 렘브란트 선택시 빛 강화
-        if (selectedArtist.toUpperCase().includes('REMBRANDT')) {
+        if (selectedArtist.toUpperCase().trim().includes('REMBRANDT')) {
           if (!finalPrompt.includes('golden luminous light')) {
             finalPrompt = finalPrompt + ', MASTERFUL use of golden luminous light, warm glowing illumination, subtle light gradations, Rembrandt lighting technique with soft transitions between light and shadow';
             console.log('✅ Enhanced light mastery for Rembrandt');
@@ -1198,7 +1198,7 @@ export default async function handler(req, res) {
         }
         
         // 티치아노 선택시 하늘/색채 강화
-        if (selectedArtist.toUpperCase().includes('TITIAN')) {
+        if (selectedArtist.toUpperCase().trim().includes('TITIAN')) {
           if (!finalPrompt.includes('luminous golden')) {
             finalPrompt = finalPrompt + ', luminous golden Venetian color with glowing sunset skies, rich warm atmospheric tones, radiant golden-red palette';
             console.log('✅ Enhanced Venetian skies for Titian');
@@ -1206,13 +1206,14 @@ export default async function handler(req, res) {
         }
         
         // 모딜리아니 선택시 긴 목/아몬드 눈 강화
-        if (selectedArtist.toUpperCase().includes('MODIGLIANI')) {
+        if (selectedArtist.toUpperCase().trim().includes('MODIGLIANI')) {
           finalPrompt = finalPrompt + '. You are Amedeo Modigliani. Transform this person into your signature portrait style. Paint with your characteristic EXTREMELY elongated graceful neck (2X longer than normal), mysterious almond-shaped eyes WITHOUT pupils (blank eyes), simplified elegant sculptural forms, melancholic serene beauty with swan-like neck proportions. Apply your iconic elongated portrait style with dramatically stretched proportions';
           console.log('✅ Role-based: You are Modigliani (control_strength 0.80)');
+          console.log('DEBUG selectedArtist:', JSON.stringify(selectedArtist)); // 디버그용
         }
         
         // 보티첼리 선택시 흐르는 우아함 강화
-        if (selectedArtist.toUpperCase().includes('BOTTICELLI')) {
+        if (selectedArtist.toUpperCase().trim().includes('BOTTICELLI')) {
           if (!finalPrompt.includes('Birth of Venus')) {
             finalPrompt = finalPrompt + ', Birth of Venus-style flowing graceful lines, wind-blown flowing hair and delicate drapery, lyrical elegant movement with ethereal beauty, Botticelli\'s signature gentle curves and graceful flowing forms';
             console.log('✅ Enhanced flowing elegance for Botticelli');
@@ -1220,7 +1221,7 @@ export default async function handler(req, res) {
         }
         
         // 베르메르 선택시 진주귀걸이 소녀 빛 강화
-        if (selectedArtist.toUpperCase().includes('VERMEER')) {
+        if (selectedArtist.toUpperCase().trim().includes('VERMEER')) {
           if (!finalPrompt.includes('Girl with Pearl')) {
             finalPrompt = finalPrompt + ', Girl with Pearl Earring-style soft window light with pearl-like luminosity, intimate domestic tranquility, gentle side lighting creating serene peaceful atmosphere, Vermeer\'s signature soft glow and quiet beauty';
             console.log('✅ Enhanced pearl-like window light for Vermeer');
@@ -1228,7 +1229,7 @@ export default async function handler(req, res) {
         }
         
         // 터너 선택시 안개 용해 강화
-        if (selectedArtist.toUpperCase().includes('TURNER')) {
+        if (selectedArtist.toUpperCase().trim().includes('TURNER')) {
           if (!finalPrompt.includes('sublime atmospheric')) {
             finalPrompt = finalPrompt + ', Turner\'s sublime atmospheric light dissolving forms in mist, golden luminous haze, dreamlike ethereal landscape with forms melting into light and atmosphere, misty transcendent beauty';
             console.log('✅ Enhanced misty atmospheric light for Turner');
@@ -1236,7 +1237,7 @@ export default async function handler(req, res) {
         }
         
         // 들라크루아 선택시 혁명적 역동성 강화
-        if (selectedArtist.toUpperCase().includes('DELACROIX')) {
+        if (selectedArtist.toUpperCase().trim().includes('DELACROIX')) {
           if (!finalPrompt.includes('Liberty Leading')) {
             finalPrompt = finalPrompt + ', Liberty Leading the People-style passionate revolutionary energy, vivid dramatic colors with dynamic movement and action, romantic heroic intensity and dramatic gestures';
             console.log('✅ Enhanced revolutionary energy for Delacroix');
@@ -1244,7 +1245,7 @@ export default async function handler(req, res) {
         }
         
         // 모네 선택시 수련/빛 포착 강화
-        if (selectedArtist.toUpperCase().includes('MONET')) {
+        if (selectedArtist.toUpperCase().trim().includes('MONET')) {
           if (!finalPrompt.includes('Water Lilies')) {
             finalPrompt = finalPrompt + ', Monet\'s Water Lilies-style capturing fleeting light effects, visible short impressionist brushstrokes, pure unmixed color dabs side by side, plein-air luminous atmosphere with shimmering light';
             console.log('✅ Enhanced Water Lilies impressionist light for Monet');
@@ -1252,7 +1253,7 @@ export default async function handler(req, res) {
         }
         
         // 드가 선택시 발레리나 움직임 강화
-        if (selectedArtist.toUpperCase().includes('DEGAS')) {
+        if (selectedArtist.toUpperCase().trim().includes('DEGAS')) {
           if (!finalPrompt.includes('ballet dancer')) {
             finalPrompt = finalPrompt + ', Degas ballet dancer-style capturing graceful movement, pastel soft colors, dynamic compositional angles, dancers in motion with rehearsal atmosphere and elegant gestures';
             console.log('✅ Enhanced ballet movement for Degas');
@@ -1260,7 +1261,7 @@ export default async function handler(req, res) {
         }
         
         // 세잔 선택시 기하학적 구조 강화
-        if (selectedArtist.toUpperCase().includes('CÉZANNE') || selectedArtist.toUpperCase().includes('CEZANNE')) {
+        if (selectedArtist.toUpperCase().trim().includes('CÉZANNE') || selectedArtist.toUpperCase().trim().includes('CEZANNE')) {
           if (!finalPrompt.includes('Still Life with Apples')) {
             finalPrompt = finalPrompt + ', Cézanne\'s Still Life with Apples-style geometric analysis, solid architectural forms, multiple viewpoints, structured volumes building pictorial architecture with geometric precision';
             console.log('✅ Enhanced geometric structure for Cézanne');
@@ -1268,7 +1269,7 @@ export default async function handler(req, res) {
         }
         
         // 고갱 선택시 평면적 원시주의 강화
-        if (selectedArtist.toUpperCase().includes('GAUGUIN')) {
+        if (selectedArtist.toUpperCase().trim().includes('GAUGUIN')) {
           if (!finalPrompt.includes('Tahitian painting')) {
             finalPrompt = finalPrompt + ', Gauguin\'s Tahitian painting-style flat bold colors, primitive decorative patterns, exotic simplicity, flat areas of pure color with dark outlines and decorative primitive aesthetic';
             console.log('✅ Enhanced flat primitive style for Gauguin');
@@ -1276,7 +1277,7 @@ export default async function handler(req, res) {
         }
         
         // 쇠라 선택시 점묘법 강화
-        if (selectedArtist.toUpperCase().includes('SEURAT')) {
+        if (selectedArtist.toUpperCase().trim().includes('SEURAT')) {
           if (!finalPrompt.includes('pointillist technique')) {
             finalPrompt = finalPrompt + ', Seurat\'s pointillist technique with tiny distinct dots of pure color, A Sunday on La Grande Jatte-style scientific color mixing, thousands of individual color points creating optical blend and luminous effect';
             console.log('✅ Enhanced pointillist dots for Seurat');
@@ -1284,7 +1285,7 @@ export default async function handler(req, res) {
         }
         
         // 칸딘스키 선택시 추상 색채 강화
-        if (selectedArtist.toUpperCase().includes('KANDINSKY')) {
+        if (selectedArtist.toUpperCase().trim().includes('KANDINSKY')) {
           if (!finalPrompt.includes('abstract color explosion')) {
             finalPrompt = finalPrompt + ', Kandinsky\'s abstract color explosion with musical rhythms, pure non-representational forms, spiritual color harmonies, dynamic geometric and organic shapes in color symphony';
             console.log('✅ Enhanced abstract color for Kandinsky');
@@ -1292,7 +1293,7 @@ export default async function handler(req, res) {
         }
         
         // 실레 선택시 왜곡된 신체 강화
-        if (selectedArtist.toUpperCase().includes('SCHIELE')) {
+        if (selectedArtist.toUpperCase().trim().includes('SCHIELE')) {
           if (!finalPrompt.includes('distorted angular')) {
             finalPrompt = finalPrompt + ', Egon Schiele-style distorted angular body forms, twisted contorted figures, stark erotic linearity, psychological tension through exaggerated elongated limbs and sharp contours';
             console.log('✅ Enhanced distorted forms for Schiele');

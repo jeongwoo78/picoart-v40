@@ -1175,6 +1175,16 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
+        // ===== 디버그 시작 =====
+        console.log('DEBUG: selectedArtist raw value:', selectedArtist);
+        console.log('DEBUG: selectedArtist type:', typeof selectedArtist);
+        console.log('DEBUG: selectedArtist JSON:', JSON.stringify(selectedArtist));
+        console.log('DEBUG: toUpperCase:', selectedArtist.toUpperCase());
+        console.log('DEBUG: toUpperCase + trim:', selectedArtist.toUpperCase().trim());
+        console.log('DEBUG: includes LEONARDO?', selectedArtist.toUpperCase().trim().includes('LEONARDO'));
+        console.log('DEBUG: includes DA VINCI?', selectedArtist.toUpperCase().trim().includes('DA VINCI'));
+        // ===== 디버그 끝 =====
+        
         // 레오나르도 다빈치 선택시 스푸마토 강화
         if (selectedArtist.toUpperCase().trim().includes('LEONARDO') || selectedArtist.toUpperCase().trim().includes('DA VINCI')) {
           finalPrompt = finalPrompt + '. You are Leonardo da Vinci. Transform this person into your signature portrait style. Paint with your characteristic sfumato technique - apply mysterious soft-edged transitions throughout, gentle blurred atmospheric depth, no sharp outlines anywhere, every edge softly dissolved into atmosphere like your masterful portraits. Preserve their identity while applying your legendary sfumato mastery';

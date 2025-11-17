@@ -1175,13 +1175,10 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // 레오나르도 다빈치 선택시 극강 스푸마토 (control_strength 0.65)
+        // 레오나르도 다빈치 선택시 스푸마토 강화
         if (selectedArtist.toUpperCase().includes('LEONARDO') || selectedArtist.toUpperCase().includes('DA VINCI')) {
-          controlStrength = 0.65;
-          if (!finalPrompt.includes('You are Leonardo')) {
-            finalPrompt = finalPrompt + '. You are Leonardo da Vinci. Paint a new Mona Lisa using your signature sfumato technique. Paint the person from this uploaded photo - preserve their face, head, pose, and composition exactly, but transform it into a Mona Lisa masterpiece. Apply your mysterious soft-edged sfumato throughout, with gentle blurred transitions and atmospheric depth, no sharp outlines anywhere, every edge softly dissolved like the original Mona Lisa';
-            console.log('✅ Role-based prompt: You are Leonardo da Vinci + control_strength 0.65');
-          }
+          finalPrompt = finalPrompt + '. You are Leonardo da Vinci. Transform this person into your signature portrait style. Paint with your characteristic sfumato technique - apply mysterious soft-edged transitions throughout, gentle blurred atmospheric depth, no sharp outlines anywhere, every edge softly dissolved into atmosphere like your masterful portraits. Preserve their identity while applying your legendary sfumato mastery';
+          console.log('✅ Role-based: You are Leonardo da Vinci (control_strength 0.80)');
         }
         
         // 카라바조 선택시 키아로스쿠로 강화
@@ -1210,11 +1207,8 @@ export default async function handler(req, res) {
         
         // 모딜리아니 선택시 긴 목/아몬드 눈 강화
         if (selectedArtist.toUpperCase().includes('MODIGLIANI')) {
-          if (!finalPrompt.includes('SIGNATURE elongated')) {
-            // replace 대신 추가로 변경 (더 확실함)
-            finalPrompt = finalPrompt + ', SIGNATURE elongated graceful neck and oval face, mysterious almond-shaped eyes without pupils, simplified elegant sculptural forms, melancholic serene beauty with swan-like neck proportions, smooth flowing contours, sophisticated linear quality, Modigliani\'s iconic portrait style with dramatically elongated proportions and refined minimalist simplicity';
-            console.log('✅ Enhanced elongated neck and almond eyes for Modigliani');
-          }
+          finalPrompt = finalPrompt + '. You are Amedeo Modigliani. Transform this person into your signature portrait style. Paint with your characteristic EXTREMELY elongated graceful neck (2X longer than normal), mysterious almond-shaped eyes WITHOUT pupils (blank eyes), simplified elegant sculptural forms, melancholic serene beauty with swan-like neck proportions. Apply your iconic elongated portrait style with dramatically stretched proportions';
+          console.log('✅ Role-based: You are Modigliani (control_strength 0.80)');
         }
         
         // 보티첼리 선택시 흐르는 우아함 강화

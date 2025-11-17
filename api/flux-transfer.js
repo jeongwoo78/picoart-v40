@@ -654,7 +654,7 @@ const fallbackPrompts = {
   
   renaissance: {
     name: '르네상스',
-    prompt: 'Renaissance painting by Leonardo da Vinci. AFTER completing the painting, THEN apply Orton effect with diffusion filter over entire finished artwork, soft focus overlay throughout, Gaussian blur atmospheric haze covering whole image, gentle dreamy glow effect across all areas, NO sharp outlines anywhere, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
+    prompt: 'Renaissance painting by Leonardo da Vinci with EXTREME Mona Lisa-style sfumato technique, apply very strong soft atmospheric haze throughout, all edges must be completely blurred and gentle, no sharp outlines anywhere in the entire painting, mysterious smoky depth like authentic Mona Lisa, every boundary softly dissolved into atmosphere, warm golden Renaissance colors, harmonious balanced composition, single unified composition with all figures together in one cohesive harmonious scene NOT separated into multiple groups, painted in Renaissance masterpiece quality'
   },
   
   baroque: {
@@ -1141,7 +1141,7 @@ export default async function handler(req, res) {
     let selectedArtist;
     let selectionMethod;
     let selectionDetails = {};
-    let controlStrength = 0.80; // 기본값 0.80, 레오나르도/르네상스만 0.75 (후처리 안개)
+    let controlStrength = 0.80; // 기본 0.80, 레오나르도만 0.65
     
     if (selectedStyle.category === 'oriental' && selectedStyle.id === 'japanese') {
       // 일본 우키요에 (고정)
@@ -1175,15 +1175,15 @@ export default async function handler(req, res) {
         };
         console.log('✅ AI selected:', selectedArtist);
         
-        // 레오나르도 다빈치 선택시 2단계: 완성 후 Orton effect
+        // 레오나르도 다빈치 선택시 극강 스푸마토 (control_strength 0.65)
         if (selectedArtist.includes('Leonardo') || selectedArtist.includes('Da Vinci')) {
-          controlStrength = 0.75; // 얼굴 보존 (75%)
-          if (!finalPrompt.includes('like Mona Lisa')) {
+          controlStrength = 0.65;
+          if (!finalPrompt.includes('You are Leonardo')) {
             finalPrompt = finalPrompt.replace(
               'sfumato technique',
-              'Leonardo da Vinci Mona Lisa painting style. AFTER completing the painting, THEN apply Orton effect with diffusion filter over entire finished artwork, soft focus overlay throughout, Gaussian blur atmospheric haze covering whole image, gentle dreamy glow effect across all areas, NO sharp outlines anywhere'
+              'You are Leonardo da Vinci. Paint a new Mona Lisa using your signature sfumato technique. Paint the person from this uploaded photo - preserve their face, head, pose, and composition exactly, but transform it into a Mona Lisa masterpiece. Apply your mysterious soft-edged sfumato throughout, with gentle blurred transitions and atmospheric depth, no sharp outlines anywhere, every edge softly dissolved like the original Mona Lisa'
             );
-            console.log('✅ Enhanced with 2-step: Paint THEN Orton effect + diffusion filter');
+            console.log('✅ Role-based prompt: You are Leonardo da Vinci + control_strength 0.65');
           }
         }
         
@@ -1214,6 +1214,17 @@ export default async function handler(req, res) {
               'luminous golden Venetian color with glowing sunset skies, rich warm atmospheric tones, radiant golden-red palette'
             );
             console.log('✅ Enhanced Venetian skies for Titian');
+          }
+        }
+        
+        // 모딜리아니 선택시 긴 목/아몬드 눈 강화
+        if (selectedArtist.includes('Modigliani')) {
+          if (!finalPrompt.includes('SIGNATURE elongated')) {
+            finalPrompt = finalPrompt.replace(
+              'elongated forms',
+              'SIGNATURE elongated graceful neck and oval face, mysterious almond-shaped eyes without pupils, simplified elegant sculptural forms, melancholic serene beauty with swan-like neck proportions, smooth flowing contours, sophisticated linear quality, Modigliani\'s iconic portrait style with dramatically elongated proportions and refined minimalist simplicity'
+            );
+            console.log('✅ Enhanced elongated neck and almond eyes for Modigliani');
           }
         }
       } else {
@@ -1247,10 +1258,10 @@ export default async function handler(req, res) {
           ai_error: aiResult.error
         };
         
-        // Fallback에서도 control_strength 설정
+        // Renaissance fallback도 control_strength 0.65
         if (fallbackKey === 'renaissance') {
-          controlStrength = 0.75; // 르네상스 fallback 0.75
-          console.log('✅ Renaissance fallback: control_strength 0.75');
+          controlStrength = 0.65;
+          console.log('✅ Renaissance fallback: control_strength 0.65');
         }
       }
     } else {
@@ -1281,10 +1292,10 @@ export default async function handler(req, res) {
       selectedArtist = fallback.name;
       selectionMethod = 'fallback_no_key';
       
-      // Fallback (no key)에서도 control_strength 설정
+      // Renaissance fallback (no key)도 control_strength 0.65
       if (fallbackKey === 'renaissance') {
-        controlStrength = 0.75; // 르네상스 fallback 0.75
-        console.log('✅ Renaissance fallback (no key): control_strength 0.75');
+        controlStrength = 0.65;
+        console.log('✅ Renaissance fallback (no key): control_strength 0.65');
       }
     }
 
